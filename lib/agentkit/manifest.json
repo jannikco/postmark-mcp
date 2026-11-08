@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-postmark",
+      "description": "Connect AI agents to Postmark using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-postmark/SKILL.md": "45fa6d3de42f710bc082abb89fd9071520303602a92a436ebc84ba66c786f48b"
+  }
+}
