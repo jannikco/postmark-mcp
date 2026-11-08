@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 1,
+  "id": "postmark-mcp",
+  "kind": "provider-connector",
+  "artifactType": "connector",
+  "qualityVersion": 2,
+  "title": "Postmark MCP server",
+  "description": "Inspect outbound delivery statistics before explicitly submitting one transactional email.",
+  "status": "ready",
+  "verification": "mock-only",
+  "releaseEligible": true,
+  "maintainer": "jannikco",
+  "license": "MIT",
+  "product": "pipmcp",
+  "appSlug": "postmark",
+  "appName": "Postmark",
+  "operationIds": [
+    "postmark_get_delivery_stats",
+    "postmark_send_email"
+  ],
+  "sourceRevision": "45f78df3f843733194ccd6f055502548ee54553d94c560ffb23413b7744948c8",
+  "evidence": [
+    "Actual tools/call and direct-provider request contract tests"
+  ],
+  "provenance": [
+    "https://postmarkapp.com/swagger/server.yml"
+  ],
+  "attributionSlug": "github-postmark-mcp",
+  "connectorId": "postmark",
+  "connector": {
+    "id": "postmark",
+    "name": "Postmark",
+    "version": "0.1.0",
+    "baseUrl": "https://api.postmarkapp.com",
+    "auth": {
+      "type": "header",
+      "env": "POSTMARK_SERVER_TOKEN",
+      "header": "X-Postmark-Server-Token"
+    },
+    "tools": [
+      {
+        "name": "postmark_get_delivery_stats",
+        "description": "Read outbound delivery statistics without exposing the server API token configuration.",
+        "method": "GET",
+        "path": "/deliverystats",
+        "readOnly": true,
+        "approvalRequired": false,
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {},
+          "body": {}
+        },
+        "sampleArguments": {},
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "provenance": [
+          "https://postmarkapp.com/swagger/server.yml"
+        ]
+      },
+      {
+        "name": "postmark_send_email",
+        "description": "Submit one transactional message; inspect ErrorCode/MessageID and subsequent delivery events.",
+        "method": "POST",
+        "path": "/email",
+        "readOnly": false,
+        "approvalRequired": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "From": {
+              "type": "string",
+              "format": "email"
+            },
+            "To": {
+              "type": "string",
+              "format": "email"
+            },
+            "Subject": {
+              "type": "string",
+              "minLength": 1
+            },
+            "TextBody": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "From",
+            "To",
+            "Subject",
+            "TextBody"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {},
+          "body": {
+            "From": "From",
+            "To": "To",
+            "Subject": "Subject",
+            "TextBody": "TextBody"
+          }
+        },
+        "sampleArguments": {
+          "From": "sender@example.com",
+          "To": "sandbox@example.com",
+          "Subject": "Authorized sandbox test",
+          "TextBody": "Authorized test message."
+        },
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "provenance": [
+          "https://postmarkapp.com/swagger/server.yml"
+        ]
+      }
+    ],
+    "workflow": {
+      "name": "Postmark authorized workflow",
+      "description": "Inspect outbound delivery statistics before explicitly submitting one transactional email.",
+      "steps": [
+        "postmark_get_delivery_stats",
+        "postmark_send_email"
+      ]
+    },
+    "provenance": [
+      "https://postmarkapp.com/swagger/server.yml"
+    ],
+    "sourceEvidence": {
+      "state": "documented",
+      "providerLiveValidation": "not-run",
+      "checkedAt": "2026-11-08",
+      "operationCount": 2,
+      "kind": "official-reference",
+      "sha256": "fdae25f55e2ef5fb71997f1128cc4148d52e0e395aed04b4f8f9e1c86fdf44a2",
+      "sources": [
+        {
+          "url": "https://postmarkapp.com/swagger/server.yml",
+          "sha256": "fdae25f55e2ef5fb71997f1128cc4148d52e0e395aed04b4f8f9e1c86fdf44a2",
+          "checkedAt": "2026-11-08T13:11:26.694222+00:00"
+        }
+      ]
+    },
+    "setup": {
+      "requiresPipMcpAccount": false,
+      "credentialsHelpUrl": "https://postmarkapp.com/swagger/server.yml",
+      "instructions": "Use a Server API Token, not an Account API Token. Sender signature/domain must be verified. Use an authorized test server/recipient; success does not prove delivery."
+    },
+    "sampleWarning": "Example IDs and email addresses are placeholders. Replace them with records and recipients you are authorized to access. Samples do not authorize writes. HTTP/fixture success does not prove provider execution or email delivery.",
+    "appSlug": "postmark",
+    "repoId": "postmark-mcp",
+    "product": "pipmcp",
+    "artifactType": "connector",
+    "sourceRevision": "45f78df3f843733194ccd6f055502548ee54553d94c560ffb23413b7744948c8",
+    "capabilityEvidence": {
+      "local": {
+        "level": "Tested",
+        "operations": [
+          {
+            "name": "postmark_get_delivery_stats",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "postmark_send_email",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          }
+        ],
+        "evidenceRefs": [
+          "Provider request/stdio contract tests"
+        ],
+        "mode": "local"
+      },
+      "managed": {
+        "level": "Documented",
+        "operations": [
+          {
+            "name": "postmark_get_delivery_stats",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "postmark_send_email",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          }
+        ],
+        "evidenceRefs": [],
+        "mode": "managed"
+      }
+    },
+    "managedAvailability": {
+      "status": "listed",
+      "checkedAt": "2026-11-08T13:20:45.156456+00:00"
+    }
+  },
+  "capabilityEvidence": {
+    "local": {
+      "level": "Tested",
+      "operations": [
+        {
+          "name": "postmark_get_delivery_stats",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "postmark_send_email",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        }
+      ],
+      "evidenceRefs": [
+        "Provider request/stdio contract tests"
+      ],
+      "mode": "local"
+    },
+    "managed": {
+      "level": "Documented",
+      "operations": [
+        {
+          "name": "postmark_get_delivery_stats",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "postmark_send_email",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        }
+      ],
+      "evidenceRefs": [],
+      "mode": "managed"
+    }
+  },
+  "utility": {
+    "problem": "Inspect outbound delivery statistics before explicitly submitting one transactional email.",
+    "output": "Actual provider API results through local MCP tools"
+  },
+  "providerDocs": "https://postmarkapp.com/swagger/server.yml"
+}
